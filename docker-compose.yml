@@ -1,0 +1,13 @@
+version: "3.2"
+services:
+  rabbitmq:
+    image: rabbitmq:4.0-rc-management
+    ports:
+      - "5671:5671"
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - 'rabbitmq_data:/data'
+
+volumes:
+  rabbitmq_data:
