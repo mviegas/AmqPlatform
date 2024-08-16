@@ -1,6 +1,6 @@
 using Amqp;
 
-namespace Rabbit.ASB.AMQP.PoC.Exceptions;
+namespace AmqPlatform.Core.Exceptions;
 
 public class SenderWithoutBindingException(string subject, AmqpException innerException)
     : Exception($"Sender without receiver binding for subject {subject}, please check transport.", innerException)

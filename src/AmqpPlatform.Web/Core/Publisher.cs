@@ -1,23 +1,9 @@
 using System.Text;
 using Amqp;
 using Amqp.Framing;
-using Rabbit.ASB.AMQP.PoC.Exceptions;
+using AmqPlatform.Core.Exceptions;
 
-namespace Rabbit.ASB.AMQP.PoC;
-
-public record PublisherOptions<T>(string Name, string Address, string Subject);
-
-public static class PublisherExtensions
-{
-    public static void AddPublisher<T>(this IServiceCollection serviceCollection, PublisherOptions<T> publisherOptions)
-    {
-        serviceCollection.AddSingleton(publisherOptions);
-
-        serviceCollection.AddScoped<Publisher<T>>(sp => new Publisher<T>(
-            connectionFacade: sp.GetRequiredService<ConnectionFacade>(),
-            publisherOptions));
-    }
-}
+namespace AmqPlatform.Core;
 
 public class Publisher<T>(ConnectionFacade connectionFacade, PublisherOptions<T> publisherOptions)
 {
@@ -25,9 +11,9 @@ public class Publisher<T>(ConnectionFacade connectionFacade, PublisherOptions<T>
     {
         try
         {
-            var connection = await connectionFacade.GetConnection();
+            var connection = await connectionFacade.TryGetConnection();
 
-            var session = new Session(connection);
+            var session = new Session(connection.Object);
             
             SenderLink sender = new SenderLink(session, publisherOptions.Name, publisherOptions.Address);
 
